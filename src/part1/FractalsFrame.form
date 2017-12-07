@@ -33,7 +33,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="gui.FractalsPanel" name="fractalsPanel1">
+    <Container class="part2.MainPanel" name="fractalsPanel1">
 
       <Layout>
         <DimensionLayout dim="0">
