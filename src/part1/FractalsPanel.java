@@ -15,7 +15,7 @@ import java.awt.Graphics;
 public class FractalsPanel extends javax.swing.JPanel {
     double sizeFactor=0.5;
     double angleFactor=90;
-    int depth = 20;
+    int depth = 50;
     int length = 150;
     /**
      * Creates new form FractalsPanel

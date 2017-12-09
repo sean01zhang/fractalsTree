@@ -5,110 +5,63 @@
  */
 package part2;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javafx.scene.shape.Line;
+import javax.swing.Timer;
 
 /**
  *
  * @author seanzhang
  */
 public class MainPanel extends javax.swing.JPanel {
-
-    double sizeFactor = 0.5;
-    double angleFactor = 90;
-    int depth = 20;
-    int length = 150;
-
-    int height = (int) Math.sqrt((length * length) + (length * length / 2));
-
+    Pencil p;
+    double depth = 5;
+    int width;
+    int startx,startAngle;
+    int starty;
+    Timer t;
+    double scaleFactor=1;
+    
+    
     /**
      * Creates new form FractalsPanel
      */
     public MainPanel() {
+        
         initComponents();
+        startx = 0;
+        startAngle =0;
+        t = new Timer(5, new TimerListener());
     }
 
+    public void startTimer() {
+        t.start();
+        
+        starty=this.getHeight()-10;
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
-       // treeFractal(g, depth, this.getWidth() / 2, this.getHeight(), length, Math.toRadians(angleFactor));
-
-        thingFractal(g, 3, 10, 150, 210, 150, 0);
-
+        super.paintComponent(g);
+        
+        thingFractal(g,(int)depth,this.getWidth(),new Pencil(startx,starty,startAngle));
     }
 
-    public void thingFractal(Graphics g, int depth, int x, int y, int xx, int yy, int slope) {
+    public void thingFractal(Graphics g, int depth, int size, Pencil p) {
         if (depth < 1) {
-
+            p.drawForward(scaleFactor*size, g);
         } else {
-            //draw line horizontal
-            g.drawLine(x, y, xx, yy);
-
-            //determine new points on this line
-            int x1 = xx/3;
-//(int)x+ ((xx-x) / 3);
-            int y1 = y;
-//(int)y+ ((y-yy) / 3);
-            int x2 = (xx* 2 / 3);
-            int y2 = y;
-//(int)y+ ((y-yy) * 2 / 3);
-                    
-            int mSide = 0;
-            int mAltitude = 0;
-
-            //for the POI of the third
-            switch (slope) {
-                case 0:
-                    mSide = 1;
-                    mAltitude = 0;
-                    break;
-
-                case 1:
-                    mSide = -1;
-                    mAltitude = 0;
-                    break;
-                case -1:
-                    mSide = 0;
-                    mAltitude = 0;
-                    break;
-            }
-
-            int intercept1 = y1 - mSide * x1;
-            int intercept2 = y2 - mAltitude * x2;
-
-            int poiX = (mSide - mAltitude) - (intercept1 - intercept2);
-            int poiY = (mSide * poiX + intercept1);
-            
-            if(mAltitude==0) {
-                poiX = xx/2;
-                poiY = yy-(int)Math.sqrt((yy/3)*(yy/3)-(yy/6)*(yy/6));
-            } else {
-    intercept1 = y1 - mSide * x1;
-    intercept2 = y2 - mAltitude * x2;
-
-           poiX = (mSide - mAltitude) - (intercept1 - intercept2);
-            poiY = (mSide * poiX + intercept1);
-            }
-
-            thingFractal(g, depth - 1, x1, y1, poiX, poiY, mSide);
-
-            thingFractal(g, depth - 1, x2, y2, poiX, poiY, mAltitude);
-        }
-
-    }
-
-    public void treeFractal(Graphics g, int depth, int x, int y, double length, double angle) {
-        //calculate the ending x,y coordinates for this line segment.
-        //As we are moving up, we subtract from the current base coordinates 
-        //The formula used to determine end points by definition of sin and cos
-        int x1 = x - (int) (Math.cos(angle) * length);
-        int y1 = y - (int) (Math.sin(angle) * length);
-        //actually draw the line
-        g.drawLine(x, y, x1, y1);
-        //if we have more depth to go, recurse
-        if (depth > 0) {
-            treeFractal(g, depth - 1, x1, y1, length * sizeFactor, angle + angleFactor);
-            treeFractal(g, depth - 1, x1, y1, length * sizeFactor, angle - angleFactor);
+            thingFractal(g,depth-1,size/3,p);
+            p.turnCClockwise(-60);
+            thingFractal(g,depth-1,size/3,p);
+            p.turnCClockwise(120);
+            thingFractal(g,depth-1,size/3,p);
+            p.turnCClockwise(-60);
+            thingFractal(g,depth-1,size/3,p);
         }
     }
 
@@ -121,19 +74,76 @@ public class MainPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        setBackground(new java.awt.Color(255, 255, 255));
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                formMouseDragged(evt);
+            }
+        });
+        addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                formMouseWheelMoved(evt);
+            }
+        });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                formMouseReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 632, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 470, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_formMouseWheelMoved
+        scaleFactor+=((double)evt.getWheelRotation()/10);
+        System.out.println(scaleFactor);
+        if(evt.getWheelRotation()>0) {
+            depth+= 0.035;
+        } else {
+            depth-=0.035;
+        }
+    }//GEN-LAST:event_formMouseWheelMoved
+
+    
+    int initX,initY;
+    private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        startx += evt.getX()-initX;
+        starty += evt.getY()-initY;
+        initX=evt.getX();
+        initY=evt.getY();
+    }//GEN-LAST:event_formMouseDragged
+
+    private void formMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseReleased
+
+    }//GEN-LAST:event_formMouseReleased
+
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        initX=evt.getX();
+        initY=evt.getY();
+    }//GEN-LAST:event_formMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+    private class TimerListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            repaint();
+            
+        }
+        
+}
 }
