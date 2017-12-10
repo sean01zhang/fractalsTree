@@ -16,6 +16,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        //starts the timer for animation of the main panel.
         mainPanel1.startTimer();
     }
 
@@ -29,7 +30,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         mainPanel1 = new fractalViewer.MainPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        modeBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,10 +47,10 @@ public class MainFrame extends javax.swing.JFrame {
             .addGap(0, 578, Short.MAX_VALUE)
         );
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Koch", "Tree" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        modeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Koch", "Tree" }));
+        modeBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                modeBoxActionPerformed(evt);
             }
         });
 
@@ -60,7 +61,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(mainPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, 0, 178, Short.MAX_VALUE)
+                .addComponent(modeBox, 0, 178, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -68,16 +69,21 @@ public class MainFrame extends javax.swing.JFrame {
             .addComponent(mainPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(modeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        mainPanel1.setMode(jComboBox1.getSelectedIndex());
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    /**
+     * This is called whenever the user wants to view another fractal.
+     * @param evt the action event.
+     */
+    private void modeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modeBoxActionPerformed
+        //sets the mode of the panel to whatever the user chose in the combo box
+        mainPanel1.setMode(modeBox.getSelectedIndex());
+    }//GEN-LAST:event_modeBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -116,7 +122,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox1;
     private fractalViewer.MainPanel mainPanel1;
+    private javax.swing.JComboBox<String> modeBox;
     // End of variables declaration//GEN-END:variables
 }

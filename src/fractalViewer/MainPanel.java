@@ -18,6 +18,7 @@ import javax.swing.Timer;
  * @author seanzhang
  */
 public class MainPanel extends javax.swing.JPanel {
+    //creates two instance varaibles of the classes kochFractal and treeFractal.
     kochFractal k;
     treeFractal tF;
     Timer t;
@@ -27,29 +28,45 @@ public class MainPanel extends javax.swing.JPanel {
      * Creates new form FractalsPanel
      */
     public MainPanel() {
-
+        //intializes graphical components
         initComponents();
-        t = new Timer(500, new TimerListener());
+        //creates a timer that refreshes the screen every 1 second
+        t = new Timer(1000, new TimerListener());
+        //sets the default mode to drawing the koch curve.
         mode = 0;
     }
 
+    /**
+     * Starts the timer that refreshes the screen
+     */
     public void startTimer() {
+        //starts the timer
         t.start();
+        //creates a kochFractal and treeFractal object.
         k = new kochFractal(6,0,this.getHeight() - 10,0,this.getWidth());
         tF = new treeFractal(10,100,0.7,30,100,this.getHeight() - 10,270);
     }
 
+    /**
+     * Sets the display mode of the fractal viewer to either a koch fractal or a tree fractal.
+     * @param x the mode number.
+     */
     public void setMode(int x) {
         mode = x;
     }
 
+    /**
+     * Draws the fractal to the screen
+     * @param g the graphics object
+     */
     @Override
     public void paintComponent(Graphics g) {
+        //this ensures that the screen is cleared after every redraw
         super.paintComponent(g);
-        
-        
+        //draws a fractal tree if the mode is set to one.
         if (mode == 1) {
             tF.drawTree(g);
+        //draws a koch fractal if the mode is set to anything else.
         } else {
             k.drawCurve(g);
         }
@@ -80,9 +97,6 @@ public class MainPanel extends javax.swing.JPanel {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 formMousePressed(evt);
             }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                formMouseReleased(evt);
-            }
         });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -97,30 +111,56 @@ public class MainPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * This method takes in mouse wheel movement to scale the drawings to any size of the user's liking.
+     * @param evt the mouse wheel event.
+     */
     private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_formMouseWheelMoved
-
+        //if the mode is set to koch
         if (mode == 0) {
+            //sets the scale factor based on how much the wheel has moved.
             k.setScaleFactor(k.getScaleFactor()+((double) evt.getWheelRotation() / 10));
             
+            //if the scale gets too high or too low, the program will adjust the depth accordingly.
             if (evt.getWheelRotation() > 0) {
                 k.setDepth(k.getDepth()+0.035);
             } else {
                 k.setDepth(k.getDepth()-0.035);
             }
+        //if the mode is set to tree
         } else {
+            //sets the scale factor based on how much the wheel has moved.
             tF.setScaleFactor(tF.getScaleFactor()+((double) evt.getWheelRotation() / 10));
             
+            //if the scale gets too high or too low, the program will adjust the depth accordingly.
             if (evt.getWheelRotation() > 0) {
                 tF.setDepth(tF.getDepth()+0.035);
             } else {
                 tF.setDepth(tF.getDepth()-0.035);
             }
         }
-
+        
+        //redraws the screen whenever the image is zoomed in or out.
+        repaint();
     }//GEN-LAST:event_formMouseWheelMoved
 
+    //creates two variables that track the initial coordinates of the mouse when the mouse button was depressed.
     int initX, initY;
+    
+    /**
+     * This method is called whenever the mouse is dragged across the screen. This allows live tracking of where the mouse is when the mouse button is depressed.
+     * This method will allow for the fractal to pan with the mouse as it moves around.
+     * @param evt the mouse event
+     */
     private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        //if the mode is set to koch fractal
+        
+        /*  The following if block
+            shifts the x and y coordinates of the fractal by how much the 
+            mouse has moved by subracting the inital coordinates of where
+            the mouse was from the current coordinates for the corresponding
+            fractal designated by the mode.
+        */
         if(mode==0) {
             k.setStartx(k.getStartx()+evt.getX()-initX);
             k.setStarty(k.getStarty()+evt.getY()-initY);
@@ -128,15 +168,21 @@ public class MainPanel extends javax.swing.JPanel {
             tF.setStartX(tF.getStartX()+evt.getX()-initX);
             tF.setStartY(tF.getStartY()+evt.getY()-initY);
         }
+        
+        //sets the original coordinates to the current coordinates.
         initX = evt.getX();
         initY = evt.getY();
+        
+        //refreshes the screen to show the changes made to the fractal.
+        repaint();
     }//GEN-LAST:event_formMouseDragged
 
-    private void formMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseReleased
-
-    }//GEN-LAST:event_formMouseReleased
-
+    /**
+     * This is called when the mouse pan starts (or when the mouse button is depressed)
+     * @param evt the mouse event.
+     */
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        //sets the inital x and y values of the mouse 
         initX = evt.getX();
         initY = evt.getY();
     }//GEN-LAST:event_formMousePressed
@@ -145,11 +191,10 @@ public class MainPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     private class TimerListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
+            //refreshes the screen.
             repaint();
-
         }
 
     }

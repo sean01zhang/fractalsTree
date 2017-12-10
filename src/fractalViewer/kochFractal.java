@@ -12,11 +12,20 @@ import java.awt.Graphics;
  * @author seanz
  */
 public class kochFractal {
-    double depth = 6;
+    //essential variables in determining the nature of the koch curve.
+    double depth;
     int width;
     int startx, startAngle,starty;
     double scaleFactor;
     
+    /**
+     * Initializes all the values essential to drawing a koch curve.
+     * @param depth how many steps do you want to go
+     * @param startx the starting x value of the koch curve.
+     * @param starty the starting y value of the koch curve.
+     * @param startAngle the inital angle of the koch curve.
+     * @param width the width of the koch curve.
+     */
     public kochFractal(double depth, int startx, int starty, int startAngle,int width) {
         this.startx = startx;
         this.starty=starty;
