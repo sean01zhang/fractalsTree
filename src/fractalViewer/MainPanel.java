@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package part2;
+package fractalViewer;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -18,52 +18,43 @@ import javax.swing.Timer;
  * @author seanzhang
  */
 public class MainPanel extends javax.swing.JPanel {
-    Pencil p;
-    double depth = 5;
-    int width;
-    int startx,startAngle;
-    int starty;
+    kochFractal k;
+    treeFractal tF;
     Timer t;
-    double scaleFactor=1;
-    
-    
+    int mode;
+
     /**
      * Creates new form FractalsPanel
      */
     public MainPanel() {
-        
+
         initComponents();
-        startx = 0;
-        startAngle =0;
-        t = new Timer(5, new TimerListener());
+        t = new Timer(500, new TimerListener());
+        mode = 0;
     }
 
     public void startTimer() {
         t.start();
-        
-        starty=this.getHeight()-10;
+        k = new kochFractal(6,0,this.getHeight() - 10,0,this.getWidth());
+        tF = new treeFractal(10,100,0.7,30,100,this.getHeight() - 10,270);
     }
-    
+
+    public void setMode(int x) {
+        mode = x;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        thingFractal(g,(int)depth,this.getWidth(),new Pencil(startx,starty,startAngle));
-    }
-
-    public void thingFractal(Graphics g, int depth, int size, Pencil p) {
-        if (depth < 1) {
-            p.drawForward(scaleFactor*size, g);
+        
+        if (mode == 1) {
+            tF.drawTree(g);
         } else {
-            thingFractal(g,depth-1,size/3,p);
-            p.turnCClockwise(-60);
-            thingFractal(g,depth-1,size/3,p);
-            p.turnCClockwise(120);
-            thingFractal(g,depth-1,size/3,p);
-            p.turnCClockwise(-60);
-            thingFractal(g,depth-1,size/3,p);
+            k.drawCurve(g);
         }
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -98,7 +89,7 @@ public class MainPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 632, Short.MAX_VALUE)
+            .addGap(0, 471, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,22 +98,38 @@ public class MainPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_formMouseWheelMoved
-        scaleFactor+=((double)evt.getWheelRotation()/10);
-        System.out.println(scaleFactor);
-        if(evt.getWheelRotation()>0) {
-            depth+= 0.035;
+
+        if (mode == 0) {
+            k.setScaleFactor(k.getScaleFactor()+((double) evt.getWheelRotation() / 10));
+            
+            if (evt.getWheelRotation() > 0) {
+                k.setDepth(k.getDepth()+0.035);
+            } else {
+                k.setDepth(k.getDepth()-0.035);
+            }
         } else {
-            depth-=0.035;
+            tF.setScaleFactor(tF.getScaleFactor()+((double) evt.getWheelRotation() / 10));
+            
+            if (evt.getWheelRotation() > 0) {
+                tF.setDepth(tF.getDepth()+0.035);
+            } else {
+                tF.setDepth(tF.getDepth()-0.035);
+            }
         }
+
     }//GEN-LAST:event_formMouseWheelMoved
 
-    
-    int initX,initY;
+    int initX, initY;
     private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
-        startx += evt.getX()-initX;
-        starty += evt.getY()-initY;
-        initX=evt.getX();
-        initY=evt.getY();
+        if(mode==0) {
+            k.setStartx(k.getStartx()+evt.getX()-initX);
+            k.setStarty(k.getStarty()+evt.getY()-initY);
+        } else {
+            tF.setStartX(tF.getStartX()+evt.getX()-initX);
+            tF.setStartY(tF.getStartY()+evt.getY()-initY);
+        }
+        initX = evt.getX();
+        initY = evt.getY();
     }//GEN-LAST:event_formMouseDragged
 
     private void formMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseReleased
@@ -130,8 +137,8 @@ public class MainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_formMouseReleased
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        initX=evt.getX();
-        initY=evt.getY();
+        initX = evt.getX();
+        initY = evt.getY();
     }//GEN-LAST:event_formMousePressed
 
 
@@ -142,8 +149,8 @@ public class MainPanel extends javax.swing.JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             repaint();
-            
+
         }
-        
-}
+
+    }
 }
